@@ -1,0 +1,22 @@
+--- a/cmake/Modules/EttercapLibCheck.cmake
++++ b/cmake/Modules/EttercapLibCheck.cmake
+@@ -98,7 +98,7 @@ include(CheckLibraryExists)
+ include(CheckIncludeFile)
+ 
+ # Iconv
+-FIND_LIBRARY(HAVE_ICONV iconv)
++FIND_LIBRARY(HAVE_ICONV NAMES iconv libiconv-full PATHS ${STAGING_DIR}/usr/lib/libiconv-full)
+ CHECK_FUNCTION_EXISTS(iconv HAVE_UTF8)
+ if(HAVE_ICONV)
+     # Seem that we have a dedicated iconv library not built in libc (e.g. FreeBSD)
+--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
+@@ -126,6 +126,8 @@ endif(NOT DISABLE_RPATH)
+ set(CMAKE_C_FLAGS_DEBUG "-O0 -ggdb3 -DDEBUG -Wall -Wno-pointer-sign -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Werror=format-security -Wextra -Wredundant-decls" CACHE STRING "" FORCE)
+ set(CMAKE_C_FLAGS_RELEASE "-O2 -w -D_FORTIFY_SOURCE=2" CACHE STRING "" FORCE)
+ 
++
++
+ if(OS_DARWIN)
+ set(CMAKE_EXE_LINKER_FLAGS "-Wl" CACHE STRING "" FORCE)
+ set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-Wl" CACHE STRING "" FORCE)
