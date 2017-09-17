@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reaver-wps-fork-t6x
-PKG_REV:=Big_endian
-PKG_VERSION:=$(PKG_REV)
+PKG_REV:=638fbdf4eace032680d6b86aa8fcc2cf4c67ef95
+PKG_VERSION:=1.6.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -17,6 +17,10 @@ PKG_SOURCE_URL:=https://github.com/t6x/reaver-wps-fork-t6x.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_REV)
 PKG_SOURCE_PROTO:=git
+
+PKG_MAINTAINER:=Andreas Nilsen <adde88@gmail.com>
+PKG_USE_MIPS16:=0
+
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -48,7 +52,7 @@ define Package/reaver/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/{reaver,wash} $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc/reaver
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/reaver.db $(1)/etc/reaver/
 endef
 
-$(eval $(call BuildPackage,reaver))
+$(eval $(call BuildPackage,reaver)) 
+
