@@ -1,0 +1,31 @@
+diff -Nur a/scripts/airmon-ng b/scripts/airmon-ng
+--- a/scripts/airmon-ng	2017-12-22 09:45:09.817778891 +1100
++++ b/scripts/airmon-ng	2017-12-22 09:54:13.417783325 +1100
+@@ -105,16 +105,17 @@
+ 	LSUSB=0
+ fi
+ 
+-if [ -d /sys/bus/pci ] || [ -d /sys/bus/pci_express ] || [ -d /proc/bus/pci ]; then
+-	if [ ! -x "$(command -v lspci 2>&1)" ]; then
+-		printf "Please install lspci from your distro's package manager.\n"
+-		exit 1
+-	else
+-		LSPCI=1
+-	fi
+-else
+-	LSPCI=0
+-fi
++LSPCI=0
++#if [ -d /sys/bus/pci ] || [ -d /sys/bus/pci_express ] || [ -d /proc/bus/pci ]; then
++#	if [ ! -x "$(command -v lspci 2>&1)" ]; then
++#		printf "Please install lspci from your distro's package manager.\n"
++#		exit 1
++#	else
++#		LSPCI=1
++#	fi
++#else
++#	LSPCI=0
++#fi
+ 
+ if [ -f /proc/modules ] || [ -d /sys/module ]; then
+ 	if [ ! -x "$(command -v modprobe 2>&1)" ]; then
