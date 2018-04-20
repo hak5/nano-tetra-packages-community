@@ -9,15 +9,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=aircrack-ng-hak5
-PKG_VERSION:=1.2-rc4
+PKG_VERSION:=1.2-rc5
 PKG_RELEASE:=1
 PKG_LICENSE:=GPLv2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/aircrack-ng/aircrack-ng.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=177ee2c040e93c03a1d8893c7de5bfe307435c6a
+PKG_SOURCE_VERSION:=7e32bd321147bfef000f7ce4f29613352604323a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
+
+PKG_FIXUP:=autoreconf
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
@@ -38,13 +40,12 @@ define Package/aircrack-ng-hak5/description
   WLAN tools for breaking 802.11 WEP/WPA keys
 endef
 
-MAKE_FLAGS += prefix=/usr \
-	libnl=true \
-	sqlite=false \
-	experimental=false \
-	stackprotector=false \
-	OSNAME=Linux 
-	
+CONFIGURE_ARGS+=  --with-ext-scripts \
+		  --with-experimental \
+		  --without-opt
+
+MAKE_FLAGS+= 	prefix=/usr \
+		OSNAME=Linux
 
 CFLAGS="$(TARGET_CFLAGS) -Wall -Iinclude/ $(TARGET_CPPFLAGS) -D_REVISION=0" \
 
