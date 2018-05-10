@@ -1,7 +1,6 @@
-diff -Nur a/scripts/airmon-ng b/scripts/airmon-ng
---- a/scripts/airmon-ng	2017-12-22 09:45:09.817778891 +1100
-+++ b/scripts/airmon-ng	2017-12-22 09:54:13.417783325 +1100
-@@ -105,16 +105,17 @@
+--- a/scripts/airmon-ng.linux
++++ b/scripts/airmon-ng.linux
+@@ -105,16 +105,17 @@ else
  	LSUSB=0
  fi
  
