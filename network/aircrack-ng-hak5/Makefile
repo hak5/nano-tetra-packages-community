@@ -42,9 +42,6 @@ define Package/aircrack-ng-hak5/description
   WLAN tools for breaking 802.11 WEP/WPA keys
 endef
 
-CONFIGURE_ARGS+=  --with-ext-scripts \
-		  --with-experimental
-
 MAKE_FLAGS+=	pkglibexecdir=/usr/bin \
 		prefix=/usr \
 		OSNAME=Linux
