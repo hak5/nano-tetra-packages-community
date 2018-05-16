@@ -1,0 +1,348 @@
+--- a/src/besside-ng.c
++++ b/src/besside-ng.c
+@@ -136,6 +136,7 @@ struct channel {
+ struct conf {
+ 	char		*cf_ifname;
+ 	struct channel	cf_channels;
++	int		cf_autochan;
+ 	int		cf_hopfreq;
+ 	int		cf_deauthfreq;
+ 	unsigned char	*cf_bssid;
+@@ -246,6 +247,7 @@ struct state {
+ 
+ static void attack_continue(struct network *n);
+ static void attack(struct network *n);
++static void autodetect_channels();
+ 
+ void show_wep_stats(int UNUSED(B), int UNUSED(force),
+ 		    PTW_tableentry UNUSED(table[PTW_KEYHSBYTES][PTW_n]),
+@@ -379,7 +381,6 @@ static void do_wait(int UNUSED(x))
+ 	wait(NULL);
+ }
+ 
+-#if 0
+ static inline void hexdump(void *p, int len)
+ {
+ 	unsigned char *x = p;
+@@ -389,7 +390,6 @@ static inline void hexdump(void *p, int
+ 
+ 	printf("\n");
+ }
+-#endif
+ 
+ static void *xmalloc(size_t sz)
+ {
+@@ -416,14 +416,13 @@ static int time_diff(struct timeval *pas
+ 	return n - p;
+ }
+ 
+-#if 0
+ static inline void timer_print(void)
+ {
+ 	int i = 0;
+ 	struct timer *t = _state.s_timers.t_next;
+ 
+ 	printf(
+-			#if !defined( __APPLE_CC__) && !defined(__NetBSD__) && !defined(__OpenBSD__)
++			#ifndef __APPLE_CC__
+ 			"\nNow %lu.%lu\n",
+ 			#else
+ 			"\nNow %lu.%d\n",
+@@ -433,7 +432,7 @@ static inline void timer_print(void)
+ 	while (t) {
+ 
+ 		printf(
+-				#if !defined( __APPLE_CC__) && !defined(__NetBSD__) && !defined(__OpenBSD__)
++				#ifndef __APPLE_CC__
+ 				"%d) %lu.%lu %p(%p)\n",
+ 				#else
+ 				"%d) %lu.%d %p(%p)\n",
+@@ -447,7 +446,6 @@ static inline void timer_print(void)
+ 		t = t->t_next;
+ 	}
+ }
+-#endif
+ 
+ static void timer_next(struct timeval *tv)
+ {
+@@ -706,7 +704,7 @@ static void wifi_send(void *p, int len)
+ 
+ 	rc = wi_write(_state.s_wi, p, len, &tx);
+ 	if (rc == -1)
+-		err(1, "wi_write()");
++		err(1, "wi_wirte()");
+ }
+ 
+ static void deauth_send(struct network *n, unsigned char *mac)
+@@ -1182,6 +1180,9 @@ static int should_attack(struct network
+ 	if (!_conf.cf_do_wep && n->n_crypto == CRYPTO_WEP)
+ 		return 0;
+ 
++	if (!_conf.cf_do_wpa && n->n_crypto == CRYPTO_WPA)
++		return 0;
++
+ 	return 1;
+ }
+ 
+@@ -1610,7 +1611,7 @@ static void attack(struct network *n)
+ 	channel_set(n->n_chan);
+ 
+ 	time_printf(V_VERBOSE,
+-		    "Pwning [%s] %s\n", n->n_ssid, mac2str(n->n_bssid));
++		    "Pwning [%s] %s on chan %d\n", n->n_ssid, mac2str(n->n_bssid), n->n_chan);
+ 
+ 	if (n->n_start.tv_sec == 0)
+ 		memcpy(&n->n_start, &_state.s_now, sizeof(n->n_start));
+@@ -1841,6 +1842,10 @@ static void wifi_beacon(struct network *
+ 				goto __bad;
+ 			break;
+ 
++		case IEEE80211_ELEMID_HTINFO:
++			n->n_chan = *p;
++			break;
++
+ 		default:
+ //			printf("id %d len %d\n", id, l);
+ 			break;
+@@ -2002,7 +2007,6 @@ static void wifi_mgt(struct network *n,
+ 	switch (wh->i_fc[0] & IEEE80211_FC0_SUBTYPE_MASK) {
+ 	case IEEE80211_FC0_SUBTYPE_BEACON:
+ 		wifi_beacon(n, wh, len);
+-		break;
+ 
+ 	case IEEE80211_FC0_SUBTYPE_AUTH:
+ 		wifi_auth(n, wh, len);
+@@ -2551,16 +2555,10 @@ static void wifi_read(void)
+     struct ieee80211_frame* wh = (struct ieee80211_frame*) buf;
+ 	struct network *n;
+ 
+-	memset(buf, 0, sizeof(buf));
+-
+ 	rd = wi_read(s->s_wi, buf, sizeof(buf), &ri);
+-	if (rd < 0)
++	if (rd <= 0)
+ 		err(1, "wi_read()");
+ 
+-	if (rd < sizeof(struct ieee80211_frame)) {
+-		return;
+-	}
+-
+ 	s->s_ri = &ri;
+ 
+ 	n = network_update(wh);
+@@ -2654,7 +2652,7 @@ static void print_status(int advance)
+ 			speed_calculate(&n->n_flood_in);
+ 			speed_calculate(&n->n_flood_out);
+ 
+-			printf(" - %d IVs rate %u [%u PPS out] len %d",
++			printf(" - %d IVs rate %d [%d PPS out] len %d",
+ 			       n->n_data_count,
+ 			       n->n_flood_in.s_speed,
+ 			       n->n_flood_out.s_speed,
+@@ -2836,8 +2834,7 @@ static void resume_network(char *buf)
+ 		switch (state) {
+ 		/* ssid */
+ 		case 0:
+-			strncpy(n->n_ssid, p, sizeof(n->n_ssid));
+-			(n->n_ssid)[sizeof(n->n_ssid) -1] = '\0';
++			strcpy(n->n_ssid, p);
+ 			break;
+ 
+ 		/* key */
+@@ -2957,6 +2954,9 @@ static void pwn(void)
+ 	time_printf(V_VERBOSE, "mac %s\n", mac2str(_state.s_mac));
+ 	time_printf(V_NORMAL, "Let's ride\n");
+ 
++	if (_conf.cf_autochan)
++		autodetect_channels();
++
+ 	if (wi_set_channel(s->s_wi, _state.s_chan) == -1)
+ 		err(1, "wi_set_channel()");
+ 
+@@ -3017,14 +3017,44 @@ static void channel_add(int num)
+ 	c->c_next = _conf.cf_channels.c_next;
+ }
+ 
+-static void init_conf(void)
++static void autodetect_freq(int start, int end, int incr)
+ {
+-	int i;
++	int freq;
++	int chan;
+ 
+-	_conf.cf_channels.c_next = &_conf.cf_channels;
++	for (freq = start; freq <= end; freq += incr)
++	{
++		if (wi_set_freq(_state.s_wi, freq) == 0)
++		{
++			chan = wi_get_channel(_state.s_wi);
++			channel_add(chan);
++			time_printf(V_VERBOSE, "Found channel %d on frequency %d\n", chan, freq);
++		}
++		else
++		{
++			time_printf(V_VERBOSE, "No channel found on frequency %d\n", freq);
++		}
++	}
++}
++static void autodetect_channels()
++{
++	time_printf(V_NORMAL, "Autodetecting supported channels...\n");
+ 
+-	for (i = 1; i <= 11; i++)
+-		channel_add(i);
++	// autodetect 2ghz channels
++	autodetect_freq(2412, 2472, 5);	// 1-13
++	autodetect_freq(2484, 2484, 1); // 14
++
++	// autodetect 5ghz channels
++	autodetect_freq(5180, 5320, 10); // 36-64
++	autodetect_freq(5500, 5720, 10); // 100-144
++	autodetect_freq(5745, 5805, 10); // 149-161
++	autodetect_freq(5825, 5825, 1);  // 165
++}
++
++static void init_conf(void)
++{
++	_conf.cf_channels.c_next = &_conf.cf_channels;
++	_conf.cf_autochan = 1;
+ 
+ 	_state.s_hopchan = _conf.cf_channels.c_next;
+ 
+@@ -3102,7 +3132,7 @@ static void print_state(int UNUSED(x))
+ 	}
+ 
+ 	printf("Current chan: %d\n", s->s_chan);
+-	printf("Hop cycle %u chans:", s->s_hopcycles);
++	printf("Hop cycle %d chans:", s->s_hopcycles);
+ 	do {
+ 		printf(" %d", c->c_num);
+ 		c = c->c_next;
+@@ -3114,7 +3144,7 @@ static void print_state(int UNUSED(x))
+ 	printf("\n");
+ 
+ 	printf(
+-		#if !defined( __APPLE_CC__) && !defined(__NetBSD__) && !defined(__OpenBSD__)
++		#ifndef __APPLE_CC__
+ 		"Now: %lu.%lu\n",
+ 		#else
+ 		"Now: %lu.%d\n",
+@@ -3124,7 +3154,7 @@ static void print_state(int UNUSED(x))
+ 
+ 	while (t) {
+ 		printf(
+-		       #if !defined( __APPLE_CC__) && !defined(__NetBSD__) && !defined(__OpenBSD__)
++		       #ifndef __APPLE_CC__
+ 		       "Timer: %lu.%lu %p[%s](%p)\n",
+ 		       #else
+ 		       "Timer: %lu.%d %p[%s](%p)\n",
+@@ -3142,10 +3172,10 @@ static void print_state(int UNUSED(x))
+ 
+ static void usage(char *prog)
+ {
+-    char *version_info = getVersion("Besside-ng", _MAJ, _MIN, _SUB_MIN, _REVISION, _BETA, _RC);
+         printf("\n"
+-                "  %s - (C) 2010 Andrea Bittau\n"
+-                "  https://www.aircrack-ng.org\n"
++                "  %s - (C) 2017 Andreas Nilsen\n"
++								"  Modified for WiFi Pineapple + 5GHz Support\n"
++                "  http://www.aircrack-ng.org  -  https://github.com/adde88\n"
+                 "\n"
+                 "  Usage: %s [options] <interface>\n"
+                 "\n"
+@@ -3161,16 +3191,19 @@ static void usage(char *prog)
+ 		"       -W              : WPA only\n"
+                 "       -v              : verbose, -vv for more, etc.\n"
+                 "       -h              : This help screen\n"
++								"       -w              : WEP only\n"
++								"       -C	 <num>	: Start WEP cracking at <num> IV's\n"
++								"       		        : Default is 5000 <num> IV's\n"
+                 "\n",
+-                version_info,
++                getVersion("Besside-ng", _MAJ, _MIN, _SUB_MIN, _REVISION, _BETA, _RC),
+ 		prog);
+-    free(version_info);
++
+ 	exit(1);
+ }
+ 
+ int main(int argc, char *argv[])
+ {
+-	int ch, temp;
++	int ch;
+ #ifdef HAVE_PCRE
+     const char *pcreerror;
+     int pcreerroffset;
+@@ -3178,35 +3211,59 @@ int main(int argc, char *argv[])
+ 
+ 	init_conf();
+ 
+-	while ((ch = getopt(argc, argv, "hb:vWs:c:p:R:")) != -1) {
++	while ((ch = getopt(argc, argv, "hb:vWws:c:p:R:C:")) != -1) {
+ 		switch (ch) {
+ 		case 's':
+ 			_conf.cf_wpa_server = optarg;
+ 			break;
+ 
+ 		case 'W':
+-			_conf.cf_do_wep = 0;
++			if (_conf.cf_do_wpa != 0 )
++			{
++				_conf.cf_do_wep = 0;
++			}
++			else{
++				printf("ERROR	:Please either WEP only or WPA only, but not both.\n");
++				printf("	:If you desire to scan both WEP & WPA, dont use either -w or -W.\n");
++				exit(1);
++			}
++
+ 			break;
+ 
+-		case 'p':
+-			temp = atoi(optarg);
+-			if (temp <= 0) {
+-				printf("Invalid flood rate value, must be > 0");
++		case 'C':
++			// Used to set the ammount of iv's required to start cracking WEP key
++			_conf.cf_crack_int = (int) atoi(optarg);
++			// Check to make sure its not a null or negative number, if it is, then abort
++			if ( (_conf.cf_crack_int) <= 0 )
++				{
++					printf("ERROR: Please enter a value of 1 or higher for -C.\n");
++					exit(1);
++				}
++			break;
++
++		case 'w':
++			// Used to only scan for WEP networks
++			if (_conf.cf_do_wep != 0 )
++			{
++				_conf.cf_do_wpa = 0;
++			}
++			else{
++				printf("ERROR	:Please either WEP only or WPA only, but not both.\n");
++				printf("	:If you desire to scan both WEP & WPA, dont use either -w or -W.\n");
+ 				exit(1);
+ 			}
+-			_conf.cf_floodfreq = (int) (1.0 / (double) temp
++
++			break;
++
++		case 'p':
++			_conf.cf_floodfreq = (int) (1.0 / (double) atoi(optarg)
+ 					      * 1000.0 * 1000.0);
+ 			break;
+ 
+ 		case 'c':
+ 			// XXX leak
+ 			_conf.cf_channels.c_next = &_conf.cf_channels;
+-			temp = atoi(optarg);
+-			if (temp <= 0) {
+-				printf("Invalid channel, must be > 0\n");
+-				exit(1);
+-			}
+-			channel_add(temp);
++			channel_add(atoi(optarg));
+ 			_state.s_hopchan = _conf.cf_channels.c_next;
+ 			break;
+ 
