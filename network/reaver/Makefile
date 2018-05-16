@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reaver
 PKG_VERSION:=1.6.5
-PKG_RELEASE:=1-static
+PKG_RELEASE:=1
 PKG_MAINTAINER:=Andreas Nilsen <adde88@gmail.com>
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -50,7 +50,7 @@ define Package/reaver/description
   attack).
 endef
 
-TARGET_CFLAGS+=$(TARGET_CPPFLAGS) -static
+TARGET_CFLAGS+=$(TARGET_CPPFLAGS)
 
 define Package/reaver/install
 	$(INSTALL_DIR) $(1)/usr/bin
