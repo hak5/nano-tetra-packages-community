@@ -8,7 +8,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=aircrack-ng
+PKG_NAME:=aircrack-ng-hak5
 PKG_VERSION:=1.2-rc5
 PKG_RELEASE:=10
 PKG_LICENSE:=GPLv2
@@ -27,7 +27,7 @@ PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/aircrack-ng
+define Package/aircrack-ng-hak5
   SECTION:=net
   CATEGORY:=Network
   DEPENDS:=+libpcap +libpthread +libopenssl +libnl +wireless-tools +ethtool +libstdcpp +libpcre +libsqlite3 +zlib
@@ -37,7 +37,7 @@ define Package/aircrack-ng
   SUBMENU:=wireless
 endef
 
-define Package/aircrack-ng/description
+define Package/aircrack-ng-hak5/description
   WLAN tools for breaking 802.11 WEP/WPA keys
 endef
 
@@ -50,11 +50,11 @@ MAKE_FLAGS+=	pkglibexecdir=/usr/bin \
 
 CFLAGS="$(TARGET_CFLAGS) -Wall -Iinclude/ $(TARGET_CPPFLAGS) -D_REVISION=0" -msse -msse2 -msse3 \
 
-define Package/aircrack-ng/install
+define Package/aircrack-ng-hak5/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/* $(1)/usr/sbin/
 endef
 
-$(eval $(call BuildPackage,aircrack-ng))
+$(eval $(call BuildPackage,aircrack-ng-hak5))
