@@ -13,7 +13,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).orig.tar.gz
 PKG_SOURCE_URL:=http://ftp.debian.org/debian/pool/main/a/at
-PKG_MD5SUM:=1da61af6c29e323abaaf13ee1a8dad79
+PKG_MD5SUM:=1cec945506b5ddf1d776c92c315fc581
 
 include $(INCLUDE_DIR)/package.mk
 
