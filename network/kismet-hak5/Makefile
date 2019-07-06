@@ -21,7 +21,7 @@ define Package/kismet-hak5
   CATEGORY:=Network
   TITLE:=Kismet
   URL:=https://www.kismetwireless.net/
-  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf +libprotobuf-c
+  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf +libprotobuf-c +libdw
 endef
 
 define Package/kismet-hak5/description
