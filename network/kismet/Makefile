@@ -16,7 +16,7 @@ PKG_USE_MIPS16:=0
 
 HOST_BUILD_DEPENDS:=protobuf/host 
 
-define Package/kismet
+define Package/kismet-hak5
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Kismet
@@ -24,7 +24,7 @@ define Package/kismet
   DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf +libprotobuf-c
 endef
 
-define Package/kismet/description
+define Package/kismet-hak5/description
  Kismet wireless capture and IDS
  Latest web-ui based Kismet
  Linux Wi-Fi and Bluetooth capture tools
@@ -54,7 +54,7 @@ define Build/Compile
 		all
 endef
 
-define Package/kismet-2018-tetra/install
+define Package/kismet-hak5/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_cap_pcapfile $(1)/usr/bin/
@@ -73,4 +73,4 @@ define Package/kismet-2018-tetra/install
 	cp -Rv $(PKG_BUILD_DIR)/http_data $(1)/etc/kismet/
 endef
 
-$(eval $(call BuildPackage,kismet))
+$(eval $(call BuildPackage,kismet-hak5))
