@@ -1,6 +1,6 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=kismet
+PKG_NAME:=kismet-hak5
 PKG_VERSION:=master
 PKG_RELEASE:=1
 
