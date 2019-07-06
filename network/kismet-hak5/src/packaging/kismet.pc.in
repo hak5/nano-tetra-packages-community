@@ -1,0 +1,11 @@
+prefix=@BASE_DIR@
+exec_prefix=@BIN_DIR@
+plugindir=@LIB_DIR@/kismet
+
+Name: kismet
+Description: Kismet wireless tool
+Version: @VERSION@
+Cflags: 
+Libs: 
+
+

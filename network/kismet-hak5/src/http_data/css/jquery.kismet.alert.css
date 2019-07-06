@@ -1,0 +1,127 @@
+div.ka-top-icon {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: normal;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+div.ka-dialog-content {
+    height: 100%;
+    display: flex;
+
+    flex-direction: column;
+}
+
+div.ka-dialog-header {
+    background-color: #AAAAAA;
+    height: 20px;
+}
+
+div.ka-dialog-main {
+    height: 100%;
+    flex: 1;
+}
+
+div.ka-dialog-footer {
+    background-color: #CCCCCC;
+    height: 20px;
+}
+
+i.ka-top-bg-normal {
+    color: #707070;
+}
+
+i.ka-top-bg-alert {
+    color: red !important;
+}
+
+i.ka-header-icon {
+    margin: 5px;
+    font-size: 14px;
+    color: red;
+}
+
+b.ka-header-text {
+    font-size: 14px;
+}
+
+.ka-bottom-text {
+    margin: auto;
+    display: table;
+}
+
+span.ka-header-close {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+.ka-dialog-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.ka-no-text {
+    font-size: 18px;
+    line-height: 100%;
+    white-space: nowrap;
+}
+
+.ka-big-icon {
+    font-size: 150px;
+    color: #E0E0E0;
+    text-align: center;
+}
+
+div.ka-alert-list {
+    position: absolute;
+    top: 20;
+    bottom: 20;
+    left: 0;
+    overflow-y: auto;
+}
+
+div.ka-alert-line {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 2px;
+    padding-bottom: 4px;
+}
+
+div.ka-alert-line:hover {
+    background-color: #CCCCCC;
+}
+
+span.ka-alert-line-date {
+    font-weight: bold;
+    font-family: monospace;
+    margin-right: 5px;
+}
+
+span.ka-alert-line-type {
+    font-family: monospace;
+    margin-right: 5px;
+}
+
+i.ka-alert-line-icon {
+    margin-right: 5px;
+}
+
+div.ka-alert-line-text {
+    margin-left: 10px;
+}
+
+div.ka-alert-line-footer {
+    margin-left: 10px;
+    font-size: 10px;
+}
+
+i.ka-alert-line-arrow {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+

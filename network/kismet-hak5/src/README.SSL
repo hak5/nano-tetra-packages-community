@@ -1,0 +1,183 @@
+Kismet Webserver and SSL
+
+xx. When should I use SSL?
+
+    SSL provides encryption between the Kismet server and a web browser
+    communicating with it.
+
+    SSL is not generally necessary when using Kismet locally (like your
+    laptop or a dedicated device), however if you plan to use Kismet remotely
+    over a public network, you should strongly consider enabling SSL.
+
+    Without SSL enabled, your data (and your Kismet Web UI login and password)
+    will be sent in plaintext, which is likely not something you want.
+
+xx. Enabling SSL
+
+    SSL is enabled in the kismet_httpd.conf configuration file by setting
+
+    httpd_ssl=true
+
+    and providing a PEM-formatted SSL certificate and key via:
+
+    httpd_ssl_cert=/path/to/cert
+    and
+    httpd_ssl_key=/path/to/key
+
+xx. Getting a certificate
+
+    Kismet can use either a legitimate (signed by a trusted authority) 
+    certificate, or you can provide a self-signed cert.
+
+    If using a real certificate, follow the instructions from your certificate
+    provider for creating a key and certificate request, and submit it for
+    signing.
+
+    If you wish to use a self-signed certificate, follow the instructions
+    below.
+
+    WARNING:  Self-signed certificates provide the same encryption, but DO NOT
+    certify that a host is legitimate.  Because a self-signed certificate is
+    not automatically trusted by your browser, you WILL receive a SSL error 
+    when you visit the Kismet Web UI.  You MUST confirm that the certificate
+    you are seeing is the certificate you expect.  If you do not verify
+    the certificate yourself, you may be susceptible to man-in-the-middle
+    interception.
+
+    WARNING:  ANY THIRD PARTY CLIENT which communicates with a SSL-enabled
+    Kismet server MUST PROVIDE A METHOD FOR THE USER TO VALIDATE AND PIN THE
+    CERTIFICATE.  Accepting all SSL certificates is NOT valid.
+
+xx. Using LetsEncrypt certificates
+
+    LetsEncrypt (https://letsencrypt.org) provides free, signed SSL 
+    certificates which are accepted by most browsers.  These certificates
+    can be used with Kismet and may offer a simpler and more secure option
+    than self-signed certificates.
+
+    LetsEncrypt currently uses a set of python (or third-party) clients
+    to automatically generate certificates.  In order to verify that you
+    control the domain the certificate is issued for, you must run these
+    scripts on the webserver with that domain.
+
+    Once the certificates are generated, they must be provided to Kismet.
+    You must provide the key file and the full chain certificate (by 
+    default named "full-chain.cer").  These files are already in PEM format.
+
+    To use a letsencrypt certificate without errors, Kismet must be running
+    on the server with that public domain name, or the connection to Kismet
+    must be forwarded, such as port forwarding over SSH.  (See the 
+    'SSH Forwarding' section for an example)
+
+xx. Generating a self-signed certificate
+
+    When using a self-signed certificate, keep in mind the warnings above in
+    "Getting a certificate".
+
+    To generate a self-signed certificate on Linux using the OpenSSL command
+    line tools:
+
+    1.  Generate a RSA key.  This is the private key used to encrypt your 
+        certificate.  You will need to generate a keyfile without an embedded
+        password.
+
+        $ openssl genrsa -out kismet.key 4096
+
+        This will generate a 4096-bit RSA keyfile.
+
+    2.  Generate a CSR (certificate request).  This is the request which
+        defines the public data in your certificate, and links it to the
+        key file.
+
+        $ openssl req -new -key kismet.key -out kismet.csr
+
+        You will be prompted to enter information to put in the certificate
+        (Country name, State, etc).  If you were generating a legitimate
+        certificate, this information would matter, but on a self-signed cert,
+        it is less relevant.  Enter information which is recognizable and
+        makes sense to you.
+
+        On the Common Name field, enter the public name of your server.
+
+        When prompted to enter a challenge password, leave it blank.
+
+    3.  Create the self-signed certificate:
+
+        $ openssl x509 -req -days 365 -in kismet.csr \
+            -signkey kismet.key -out kismet.pem
+
+        This will generate a request for a certificate which is valid from the
+        time you run the command until a year in the future.  To make a 
+        certificate valid for longer than a year, change the -days parameter.
+
+    4.  Verify your certificate is what you expected
+
+        $ openssl x509 -in kismet.pem -noout -text
+
+        This should print out information about your certificate, including 
+        the signature you will need to validate it in the future.
+
+    Once you have generated your certificate, copy it and configure Kismet
+    to use SSL and point at your certificate.  For example, if you
+    copied your .pem and .key files into ~/.kismet/ssl/, you would configure
+    Kismet:
+
+        httpd_ssl=true
+        httpd_ssl_cert=%h/.kismet/ssl/kismet.pem
+        httpd_ssl_key=%h/.kismet/ssl/kismet.key
+
+xx. Converting certificates
+
+    Kismet requires that the certificate be in PEM format.  If you are using
+    a certificate signed by a certificate authority, you may receive the
+    certificate in DER format.
+
+    If you are unsure what format a certificate file is in, open it in a 
+    standard editor or use the 'cat' command.  A PEM format certificate
+    will include '-----BEGIN CERTIFICATE----', while a DER format certificate
+    will be pure binary.
+
+    To convert a DER to PEM certificate:
+
+    $ openssl x509 -inform der -in certificate.cer -out certificate.pem
+
+xx. Intermediary certificates
+
+    Many certificate authorities use an intermediary signing certificate.
+
+    This certificate must be included in the chain presented by the server
+    to be valid in all browsers (Typically, Chrome works without intermediary
+    certificates, but command-line tools like 'curl' and other OpenSSL based
+    code, such as embedded https clients in Python, Ruby, etc, does not.
+
+    If you are using an official certificate, and need to include the 
+    intermediary certificate from your provider, simply concatenate it with
+    your server certificate:
+
+        $ cat kismet.pem intermediate.pem > combo.pem
+
+    And use the combined certificate in your kismet_httpd.conf:
+
+        httpd_ssl_cert=%h/.kismet/ssl/combo.pem
+
+    The order of certificate files is important:  Your server certificate 
+    must come before the intermediary certificate.
+
+xx. SSH forwarding
+
+    To take advantage of a SSL certificate which has a valid domain name
+    and is signed by an accepted authority, Kismet must be accessible via
+    the dns name the certificate is generated for.
+
+    Often a preferable option to running Kismet on the server itself is to
+    set up port forwarding via SSH.
+
+    To enable public port forwarding, first the GatewayPorts option must
+    be enabled on the server in sshd_config:
+    
+        GatewayPorts yes
+
+    Then a SSH session with remote port forwarding should be established:
+
+        $ ssh -R *:2501:localhost:2501 user@host
+

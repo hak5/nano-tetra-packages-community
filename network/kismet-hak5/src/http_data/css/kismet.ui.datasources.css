@@ -1,0 +1,110 @@
+div.k-cc-main {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    bottom: 5px;
+    right: 5px;
+    overflow-y: hidden !important;
+}
+
+div.k-cc-canvas {
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden !important;
+}
+
+canvas.k-cc-canvas {
+    overflow-y: hidden !important;
+}
+
+div.k-ds-tablediv {
+    overflow-y: hidden;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    bottom: 5px;
+    right: 5px;
+}
+
+i.k-ds-warning {
+    color: yellow;
+}
+
+i.k-ds-error {
+    color: red;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+i.k-ds-paused {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+div.k-ds-details {
+    padding: 10px;
+}
+
+div.k-ds-accordion {
+    padding: 5px;
+}
+
+span.k-ds-source {
+    padding-left: 5px;
+    display: inline-block;
+    width: 20%;
+    min-width: 200px;
+}
+
+span.k-ds-rrd {
+}
+
+div.k-ds-content {
+    padding: 5px;
+}
+
+div.k-ds-contentdiv {
+    overflow-y: auto;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    bottom: 5px;
+    right: 5px;
+}
+
+table.k-ds-table {
+    border: 0;
+}
+
+table.k-ds-table b {
+    padding-top: 0.5em;
+}
+
+table.k-ds-table td {
+    vertical-align: top;
+}
+
+table.k-ds-table tr td:nth-of-type(1) {
+    width: 20%;
+    max-width: 100px;
+}
+
+table.k-ds-table tr td:nth-of-type(2)  {
+    width: 100%;
+}
+
+/* System channel flag */
+.enable-chan-system {
+    background: orange !important;
+}
+
+/* User selected */
+.enable-chan-user {
+    background: orange !important;
+}
+
+/* User disabled */
+.disable-chan-user {
+
+}
+

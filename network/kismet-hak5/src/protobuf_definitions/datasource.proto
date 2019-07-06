@@ -1,0 +1,218 @@
+syntax = "proto2";
+
+import "kismet.proto";
+
+package KismetDatasource;
+
+// Multiple channels
+message SubChannels {
+    repeated string channels = 1;
+}
+
+// Single channel
+message SubChanset {
+    required string channel = 1;
+}
+
+// Channel hop commands
+message SubChanhop {
+    repeated string channels = 1; // Channels to hop over
+    optional double rate = 2; // Hop rate
+    optional bool shuffle = 3; // Shuffle
+    optional uint32 shuffle_skip = 4; // Skip interval per shuffle
+    optional uint32 offset = 5; // Offset for multiple devices on the same band
+}
+
+// GPS data
+message SubGps {
+    required double lat = 1;
+    required double lon = 2;
+    required double alt = 3;
+    required double speed = 4;
+    required double heading = 5;
+    required double precision = 6;
+    required uint32 fix = 7;
+    required uint64 time_sec = 8;
+    required uint64 time_usec = 9;
+    required string type = 10;
+    required string name = 11;
+    optional double high_prec_time = 12;
+}
+
+// Possible interface
+message SubInterface {
+    required string interface = 1;
+    required string flags = 2;
+    optional string hardware = 3;
+}
+
+// Packetized data
+message SubPacket {
+    required uint64 time_sec = 1;
+    required uint64 time_usec = 2;
+    required uint32 dlt = 3;
+    required uint64 size = 4;
+    required bytes data = 5;
+}
+
+message SubJson {
+    required uint64 time_sec = 1;
+    required uint64 time_usec = 2;
+    required string type = 3;
+    required string json = 4;
+}
+
+message SubBuffer {
+    required uint64 time_sec = 1;
+    required uint64 time_usec = 2;
+    required string type = 3;
+    required bytes buffer = 4;
+}
+
+// Signal metadata
+message SubSignal {
+    optional double signal_dbm = 1;
+    optional double noise_dbm = 2;
+    optional double signal_rssi = 3;
+    optional double noise_rssi = 4;
+    optional double freq_khz = 5;
+    optional string channel = 6;
+    optional double datarate = 7;
+}
+
+// Spectrum configuration
+message SubSpecset {
+    optional double start_mhz = 1;
+    optional double end_mhz = 2;
+    optional double samples_per_bucket = 3;
+    optional double bucket_width_hz = 4;
+    optional bool enable_amp = 5;
+    optional uint64 if_amp = 6;
+    optional uint64 baseband_amp = 7;
+}
+
+// Spectrum report
+message SubSpectrum {
+    optional uint64 time_sec = 1;
+    optional uint64 time_usec = 2;
+    optional double start_mhz = 3;
+    optional double end_mhz = 4;
+    optional double bucket_width_hz = 5;
+    repeated int32 data = 6;
+}
+
+// Command success
+message SubSuccess {
+    required bool success = 1;
+    required uint32 seqno = 2;
+}
+
+// Close open device (Kismet->Driver)
+// KDSCLOSEDATASOURCE
+message CloseDatasource {
+}
+
+// Configure source behavior (Kismet->Driver)
+// KDSCONFIGURE
+message Configure {
+    optional SubChanset channel = 1;
+    optional SubChanhop hopping = 2;
+    optional SubSpecset spectrum = 3;
+}
+
+// Configuration update (Driver->Kismet)
+// KDSCONFIGUREREORT
+message ConfigureReport {
+    required SubSuccess success = 1;
+    optional SubChanset channel = 2;
+    optional SubChanhop hopping = 3;
+    optional KismetExternal.MsgbusMessage message = 4;
+    optional string warning = 5;
+}
+
+// Packet payload (Driver->Kismet)
+message DataReport {
+    optional SubGps gps = 1;
+    optional KismetExternal.MsgbusMessage message = 2;
+    optional SubPacket packet = 3;
+    optional SubSignal signal = 4;
+    optional SubSpectrum spectrum = 5;
+    optional string warning = 6;
+    optional SubJson json = 7;
+    optional SubBuffer buffer = 8;
+    optional double high_prec_time = 9;
+}
+
+// Fatal error (Driver->Kismet)
+// KDSERRORREPORT
+message ErrorReport {
+    required SubSuccess success = 1;
+    optional KismetExternal.MsgbusMessage message = 2;
+}
+
+// Request interface list (Kismet->Driver)
+message ListInterfaces {
+
+}
+
+// Interface list (Driver->Kismet)
+// KDSINTERFACESREPORT
+message InterfacesReport {
+    required SubSuccess success = 1;
+    optional KismetExternal.MsgbusMessage message = 2;
+    repeated SubInterface interfaces = 3;
+}
+
+// Initiate a new datasource on a remote connection (Driver->Kismet)
+// KDSNEWSOURCE
+message NewSource {
+    required string definition = 1;
+    required string sourcetype = 2;
+    required string uuid = 3;
+}
+
+// Initiate opening an interface (Kismet->Driver)
+// KDSOPENSOURCE
+message OpenSource {
+    required string definition = 1;
+}
+
+// Report success of opening a source, and all source data (Driver->Kismet)
+// KDSOPENSOURCEREPORT
+message OpenSourceReport {
+    required SubSuccess success = 1;
+    optional uint32 dlt = 2;
+    optional string capture_interface = 3;
+    optional SubChannels channels = 4;
+    optional SubChanset channel = 5;
+    optional SubChanhop hop_config = 6;
+    optional string hardware = 7;
+    optional KismetExternal.MsgbusMessage message = 8;
+    optional SubSpecset spectrum = 9;
+    optional string uuid = 10;
+    optional string warning = 11;
+}
+
+// Query if a driver can handle a definition (Kismet->Driver)
+// KDSPROBESOURCE
+message ProbeSource {
+    required string definition = 1;
+}
+
+// Respond to a probe (Driver->Kismet)
+// KDSPROBESOURCEREPORT
+message ProbeSourceReport {
+    required SubSuccess success = 1;
+    optional KismetExternal.MsgbusMessage message = 2;
+    optional SubChannels channels = 3;
+    optional SubChanset channel = 4;
+    optional SubSpecset spectrum = 5;
+    optional string hardware = 6;
+}
+
+// Non-fatal warning (Driver->Kismet)
+// KDSWARNINGREPORT
+message WarningReport {
+    required string warning = 1;
+}
+

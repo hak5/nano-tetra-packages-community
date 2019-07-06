@@ -1,0 +1,164 @@
+table.kismet_devicedata {
+    table-layout: fixed;
+    width: 100%;
+    border: 0;
+}
+
+table.kismet_devicedata b {
+    padding-top: 0.5em;
+}
+
+table.kismet_devicedata td {
+    vertical-align: top;
+}
+
+td.kismet_devicedata_td_title:first-child {
+    width: 40%;
+    max-width: 100px;
+}
+
+td.kismet_devicedata_td_content {
+    width: 100%;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.k_dd_td_help {
+    font-size: 8px;
+    color: #c0c0c0;
+    position: relative;
+    right: -8px;
+}
+
+.k_dd_td_help:hover {
+    color: black;
+}
+
+td.kismet_devicedata_span {
+    width: 100%;
+}
+
+.k_padding_title {
+    padding-top: 10px;
+}
+
+/*
+table.kismet_devicedata td.span {
+    text-align: center;
+}
+*/
+
+div.donut {
+    width: 200px;
+    height: 200px;
+    margin: auto;
+}
+
+div.smalldonut {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+}
+
+div.freqbar {
+    width: 350px;
+    height: 150px;
+    margin: auto;
+}
+
+.expander.expanded {
+    padding-left: 13px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-image: url(images/expanded.gif);
+}
+
+.expander.collapsed {
+    padding-left: 13px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-image: url(images/collapsed.gif);
+}
+
+canvas.k-mm-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.pseudolink {
+    font-weight: bold;
+}
+
+.pseudolink:hover {
+    cursor: pointer;
+}
+
+div.k-dsd-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+div.k-dsd-info {
+    height: 100%;
+    width: 25%;
+    padding: 10px;
+}
+
+div.k-dsd-graph {
+    height: 100%;
+    width: 75%;
+    flex: 1;
+}
+
+canvas.k-dsd-canvas {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+}
+
+div.k-dsd-title {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+table.k-dsd-table {
+    border: none !important;
+}
+
+i.k-dsd-arrow {
+    padding-left: 3px;
+}
+
+i.k-dsd-arrow-up {
+    color: green;
+}
+
+i.k-dsd-arrow-down {
+    color: red;
+}
+
+div.k-b-s-plugin-title {
+    padding-left: 10px;
+    margin-top: 10px;
+    border-left: 5px solid black;
+}
+
+b.k-b-s-plugin-title {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+div.k-b-s-plugin-content {
+    padding-left: 25px;
+}
+
+div.viewselector {
+    float: left;
+}
+
+.selectoroverflow {
+    height: 200px;
+}
+
