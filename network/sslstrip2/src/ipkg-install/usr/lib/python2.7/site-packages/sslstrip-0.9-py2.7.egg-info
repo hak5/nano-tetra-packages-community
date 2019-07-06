@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: sslstrip
+Version: 0.9
+Summary: A MITM tool that implements Moxie Marlinspike's HTTPS stripping attacks.
+Home-page: http://www.thoughtcrime.org/software/sslstrip/
+Author: Moxie Marlinspike
+Author-email: moxie@thoughtcrime.org
+License: GPL
+Description: UNKNOWN
+Platform: UNKNOWN

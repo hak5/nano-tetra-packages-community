@@ -1,0 +1,10 @@
+Package: asleap
+Version: 2.2-1
+Depends: libc, libpthread, libopenssl, libpcap
+Source: /root/gits/hostapd-mana-openwrt/net/asleap
+Section: base
+Maintainer: Andreas Nilsen <adde88@gmail.com.com>, Original asleap package: Josh <jwright@hasborg.com>
+Architecture: ar71xx
+Installed-Size: 11407
+Description:  A generic MS-CHAPv2 cracking tool.
+ Can be applied anytime you have a MS-CHAPv2 packet capture available.

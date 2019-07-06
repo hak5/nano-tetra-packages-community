@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2019 Andreas Nilsen <adde88@gmail.com> https://github.com/adde88
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,23 +9,14 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sslstrip2
 PKG_VERSION:=1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/byt3bl33d3r/sslstrip2.git
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_VERSION:=f228f302826cf7b4f18823ba2f8a4b1cca89404e
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_MAINTAINER:=Andreas Nilsen <adde88@gmail.com>
 
-PKG_BUILD_PARALLEL:=1
-
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python
-
-PKG_MAINTAINER:=Andreas Nilsen <adde88@gmail.com.com>
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
@@ -41,6 +32,11 @@ endef
 define Package/sslstrip2/description
 	With the new feature to avoid HTTP Strict Transport Security (HSTS)
 	protection mechanism.
+endef
+
+define Build/Prepare
+	mkdir -p $(PKG_BUILD_DIR)
+	$(CP) -rf ./src/* $(PKG_BUILD_DIR)/
 endef
 
 define Build/Compile
