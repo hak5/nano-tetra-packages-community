@@ -1,0 +1,4 @@
+# Ignore C/C++ objects and libraries.
+*.d
+*.o
+*.a
