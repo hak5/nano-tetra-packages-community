@@ -38,10 +38,7 @@ CONFIGURE_ARGS += \
 	--sysconfdir=/etc/kismet \
 	--bindir=/usr/bin \
 	--disable-python-tools \
-    --with-protoc=$(STAGING_DIR_HOST)/bin/protoc 
-	# We should be using protoc-c from the host binaries here, but the openwrt
-	# protoc-c package doesn't build a host tool
-	# --with-protoc-c=$(STAGING_DIR_HOST)/bin/protoc-c
+	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc 
 
 # Override libs to force lpthread because we don't detect it properly on openwrt
 CONFIGURE_VARS += \
