@@ -1,14 +1,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=kismet-hak5
-PKG_VERSION:=master
+PKG_VERSION:=kismet-2019-07-R1
 PKG_RELEASE:=1
 
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://www.kismetwireless.net/git/kismet.git
-PKG_SOURCE_VERSION:=HEAD
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_URL:=https://github.com/kismetwireless/kismet.git
+PKG_SOURCE_VERSION:=d3fc27147bb6f4cdca6c3d0bd78866e74bb6e293
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -19,15 +20,16 @@ HOST_BUILD_DEPENDS:=protobuf/host
 define Package/kismet-hak5
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=Kismet
+  TITLE:=Kismet (Hak5)
   URL:=https://www.kismetwireless.net/
   DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf +libprotobuf-c +libdw
+  SUBMENU:=wireless
 endef
 
 define Package/kismet-hak5/description
- Kismet wireless capture and IDS
- Latest web-ui based Kismet
- Linux Wi-Fi and Bluetooth capture tools
+	Kismet wireless capture and IDS
+	Latest web UI based Kismet
+	Linux Wi-Fi and Bluetooth capture tools
 endef
 
 define Build/Configure
@@ -61,7 +63,9 @@ define Package/kismet-hak5/install
 	$(INSTALL_DIR) $(1)/etc/kismet/
 	$(INSTALL_CONF) ./files/kismet_site.conf $(1)/etc/kismet/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_80211.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_alerts.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_filter.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_httpd.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_logging.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_memory.conf $(1)/etc/kismet
