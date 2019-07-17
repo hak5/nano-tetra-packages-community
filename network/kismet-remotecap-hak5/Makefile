@@ -54,8 +54,9 @@ endef
 
 define Package/kismet-remotecap-hak5/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_server $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_cap_pcapfile $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_cap_kismetdb $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_wifi/kismet_cap_linux_wifi $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_bluetooth/kismet_cap_linux_bluetooth $(1)/usr/bin/
 
@@ -72,3 +73,4 @@ define Package/kismet-remotecap-hak5/install
 endef
 
 $(eval $(call BuildPackage,kismet-remotecap-hak5))
+
