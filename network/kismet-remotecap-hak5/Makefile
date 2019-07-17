@@ -38,7 +38,7 @@ CONFIGURE_ARGS += \
 	--sysconfdir=/etc/kismet \
 	--bindir=/usr/bin \
 	--disable-python-tools \
-	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc \ 
+	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc \
 	--enable-capture-tools-only
 
 # Override libs to force lpthread because we don't detect it properly on openwrt
