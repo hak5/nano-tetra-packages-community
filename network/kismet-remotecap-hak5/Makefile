@@ -22,7 +22,7 @@ define Package/kismet-remotecap-hak5
   CATEGORY:=Network
   TITLE:=Kismet Remote Capture (Hak5)
   URL:=https://www.kismetwireless.net/
-  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf +libprotobuf-c +libdw
+  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libdw
   SUBMENU:=wireless
 endef
 
@@ -54,7 +54,6 @@ endef
 
 define Package/kismet-remotecap-hak5/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_server $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_cap_pcapfile $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_cap_kismetdb $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_wifi/kismet_cap_linux_wifi $(1)/usr/bin/
