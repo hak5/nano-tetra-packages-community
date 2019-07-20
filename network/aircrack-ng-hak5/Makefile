@@ -54,7 +54,6 @@ define Package/aircrack-ng-hak5/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/* $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/aircrack-ng--generic $(1)/usr/bin
 endef
 
 $(eval $(call BuildPackage,aircrack-ng-hak5))
