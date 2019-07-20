@@ -2,6 +2,7 @@
 # Copyright (C) 2006-2015 OpenWrt.org
 # Copyright (C) 2018 seb@hak5.org
 # Copyright (C) 2018 adde88@gmail.com
+# Copyright (C) 2019 marc@hak5.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -10,7 +11,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=aircrack-ng-hak5
-PKG_VERSION:=1.2-rc5
+PKG_VERSION:=1.5.2
 PKG_RELEASE:=1
 PKG_LICENSE:=GPLv2
 
@@ -18,7 +19,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/aircrack-ng/aircrack-ng.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=804b711f5d03362d3cb955b0a12d2e837357ac79
+PKG_SOURCE_VERSION:=5b5e3d0600b07bdf0735f25a71b02ab3ba822bd9
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_FIXUP:=autoreconf
