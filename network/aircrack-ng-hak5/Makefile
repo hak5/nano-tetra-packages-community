@@ -23,41 +23,43 @@ PKG_MIRROR_HASH:=17893e05278635675a77a3cb0927202ec4df2fc9a742689a7a88e4a8f27a69b
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 
-PKG_MAINTAINER:=Rick Farina <zerochaos@gentoo.org>
+PKG_MAINTAINER:=Marc E. <marc@hak5.org>
 
 PKG_FIXUP:=autoreconf
 
 PKG_CONFIG_DEPENDS:= \
-	CONFIG_AIRCRACK_NG_GCRYPT \
-	CONFIG_AIRCRACK_NG_OPENSSL \
+	CONFIG_AIRCRACK_NG_HAK5_GCRYPT \
+	CONFIG_AIRCRACK_NG_HAK5_OPENSSL \
 	\
-	CONFIG_AIRCRACK_NG_OPTIMIZE_SPEED \
+	CONFIG_AIRCRACK_NG_HAK5_OPTIMIZE_SPEED \
 	\
-	CONFIG_AIRCRACK_NG_HWLOC \
-	CONFIG_AIRCRACK_NG_SQLITE3
+	CONFIG_AIRCRACK_NG_HAK5_HWLOC \
+	CONFIG_AIRCRACK_NG_HAK5_SQLITE3
 
 include $(INCLUDE_DIR)/uclibc++.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/aircrack-ng-hak5
-  SECTION:=net
-  CATEGORY:=Network
-  DEPENDS:=+AIRCRACK_NG_HWLOC:libhwloc +libpcap +libpcre +libpthread $(CXX_DEPENDS)
-  DEPENDS += +AIRCRACK_NG_OPENSSL:libopenssl
-  DEPENDS += +AIRCRACK_NG_GCRYPT:libgcrypt
-  DEPENDS += +AIRCRACK_NG_SQLITE3:libsqlite3
-  DEPENDS += +libnl-core +libnl-genl +zlib
-  TITLE:=WLAN tools (with Airmon-NG) for breaking 802.11 WEP/WPA keys
-  URL:=https://www.aircrack-ng.org/
-  SUBMENU:=wireless
+	SECTION:=net
+	CATEGORY:=Network
+	DEPENDS:=+libpcap +libpcre +libpthread $(CXX_DEPENDS)
+	DEPENDS += +AIRCRACK_NG_HAK5_HWLOC:libhwloc
+	DEPENDS += +AIRCRACK_NG_HAK5_OPENSSL:libopenssl
+	DEPENDS += +AIRCRACK_NG_HAK5_GCRYPT:libgcrypt
+	DEPENDS += +AIRCRACK_NG_HAK5_SQLITE3:libsqlite3
+	DEPENDS += +libnl-core +libnl-genl +zlib
+	TITLE:=WLAN Cracking and Sniffing tools (Hak5)
+  	URL:=https://www.aircrack-ng.org/
+  	SUBMENU:=wireless
 endef
 
 define Package/aircrack-ng-hak5/description
-  WLAN tools for breaking 802.11 WEP/WPA keys
+	WLAN Cracking and Sniffing tools
+	Some tools in this package are omitted for saving space.
 endef
 
 define Package/aircrack-ng-hak5/config
-  source "$(SOURCE)/Config.in"
+  	source "$(SOURCE)/Config.in"
 endef
 
 define Build/Prepare
@@ -75,10 +77,10 @@ CONFIGURE_ARGS += \
 	\
 	PYTHON=$(PYTHON) \
 	\
-	$(if $(CONFIG_AIRCRACK_NG_OPENSSL),,--without-openssl) \
-	$(if $(CONFIG_AIRCRACK_NG_GCRYPT),--with-gcrypt,--without-gcrypt) \
-	$(if $(CONFIG_AIRCRACK_NG_HWLOC),--enable-hwloc,--disable-hwloc) \
-	$(if $(CONFIG_AIRCRACK_NG_SQLITE3),--with-sqlite3=$(STAGING_DIR)/usr,--without-sqlite3)
+	$(if $(CONFIG_AIRCRACK_NG_HAK5_OPENSSL),,--without-openssl) \
+	$(if $(CONFIG_AIRCRACK_NG_HAK5_GCRYPT),--with-gcrypt,--without-gcrypt) \
+	$(if $(CONFIG_AIRCRACK_NG_HAK5_HWLOC),--enable-hwloc,--disable-hwloc) \
+	$(if $(CONFIG_AIRCRACK_NG_HAK5_SQLITE3),--with-sqlite3=$(STAGING_DIR)/usr,--without-sqlite3)
 
 TARGET_CFLAGS += -Wall -Wextra -ffunction-sections -fdata-sections
 
@@ -91,9 +93,16 @@ TARGET_LDFLAGS+= \
 
 define Package/aircrack-ng-hak5/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/aircrack-ng $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/packetforge-ng $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/wpaclean $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/* $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/airbase-ng $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/aireplay-ng $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/airmon-ng $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/airodump-ng $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/airodump-ng-oui-update $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/besside-ng $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib/
 endef

@@ -1,19 +1,19 @@
-if PACKAGE_aircrack-ng
+if PACKAGE_aircrack-ng-hak5
 
 comment "SSL support"
 
 choice
     prompt "Select SSL library"
-    default AIRCRACK_NG_OPENSSL
+    default AIRCRACK_NG_HAK5_OPENSSL
 
-    config AIRCRACK_NG_OPENSSL
+    config AIRCRACK_NG_HAK5_OPENSSL
         bool "openssl"
 
-    config AIRCRACK_NG_GCRYPT
+    config AIRCRACK_NG_HAK5_GCRYPT
         bool "gcrypt"
 endchoice
 
-config AIRCRACK_NG_OPTIMIZE_SPEED
+config AIRCRACK_NG_HAK5_OPTIMIZE_SPEED
     bool "Optimize for speed"
     default n
     help
@@ -23,11 +23,11 @@ config AIRCRACK_NG_OPTIMIZE_SPEED
 
 comment "Miscellaneous"
 
-config AIRCRACK_NG_HWLOC
+config AIRCRACK_NG_HAK5_HWLOC
     bool "Hwloc support"
     default n
 
-config AIRCRACK_NG_SQLITE3
+config AIRCRACK_NG_HAK5_SQLITE3
     bool "Sqlite3 support"
     default n
 
