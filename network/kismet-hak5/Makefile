@@ -22,7 +22,7 @@ define Package/kismet-hak5
   CATEGORY:=Network
   TITLE:=Kismet (Hak5)
   URL:=https://www.kismetwireless.net/
-  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf +libprotobuf-c +libdw
+  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuflite +libprotobuf-c +libdw
   SUBMENU:=wireless
 endef
 
@@ -40,7 +40,8 @@ CONFIGURE_ARGS += \
 	--sysconfdir=/etc/kismet \
 	--bindir=/usr/bin \
 	--disable-python-tools \
-	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc 
+	--with-protoc=$(STAGING_DIR_HOSTPKG)/bin/protoc \
+	--enable-protobuflite
 
 # Override libs to force lpthread because we don't detect it properly on openwrt
 CONFIGURE_VARS += \
@@ -71,6 +72,7 @@ define Package/kismet-hak5/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_memory.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_storage.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_uav.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_manuf.conf $(1)/etc/kismet
 	cp -Rv $(PKG_BUILD_DIR)/http_data $(1)/etc/kismet/
 endef
 
