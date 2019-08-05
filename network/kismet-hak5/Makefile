@@ -1,13 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=kismet-hak5
-PKG_VERSION:=master-2272019
+PKG_VERSION:=2019-08-R1
 PKG_RELEASE:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/kismetwireless/kismet.git
-PKG_SOURCE_VERSION:=8ba84bbaa0819f4572b3daec9b3c341ae6faf68e
+PKG_SOURCE_VERSION:=9b21ac9f977f898b8643a1b35d5d829f448de75a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
@@ -62,7 +62,7 @@ define Package/kismet-hak5/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_bluetooth/kismet_cap_linux_bluetooth $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/kismet/
-	$(INSTALL_CONF) ./files/kismet_site.conf $(1)/etc/kismet/
+	$(INSTALL_CONF) ./files/kismet_package.txt $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_80211.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_alerts.conf $(1)/etc/kismet
