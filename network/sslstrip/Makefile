@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sslstrip
-PKG_VERSION:=0.7
+PKG_VERSION:=0.9
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://www.thoughtcrime.org/software/sslstrip
-PKG_MD5SUM:=7fedb46e682c2d8ef3fbc52da5e002da
+PKG_SOURCE_URL:=http://www.moxie.org/software/sslstrip
+PKG_MD5SUM:=944020144e4f5528888b3dfbb107dd78
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
@@ -22,8 +22,8 @@ define Package/sslstrip
   SECTION:=net
   CATEGORY:=Network
   TITLE:=sslstrip
-  URL:=http://www.thoughtcrime.org/software/sslstrip/index.html
-  DEPENDS:=+python +twisted +twisted-web +pyopenssl
+  URL:=http://www.moxie.org/software/sslstrip/index.html
+  DEPENDS:=+python +python-twisted +python-openssl
 endef
 
 define Package/sslstrip/description
@@ -40,17 +40,14 @@ endef
 
 define Package/sslstrip/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) \
-	    $(PKG_INSTALL_DIR)/usr/bin/sslstrip \
-	    $(1)/usr/bin
-	$(INSTALL_DIR) $(1)/usr/share/sslstrip
-	$(CP) \
-	    $(PKG_INSTALL_DIR)/usr/share/sslstrip/* \
-	    $(1)/usr/share/sslstrip
+	$(CP) $(PKG_BUILD_DIR)/sslstrip.py $(1)/usr/bin
+
+	# $(INSTALL_DIR) $(1)/usr/share/sslstrip
+	# $(CP) $(PKG_INSTALL_DIR)/usr/share/sslstrip/* $(1)/usr/share/sslstrip
+
 	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
-	$(CP) \
-	    $(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-	    $(1)$(PYTHON_PKG_DIR)
+	$(CP) $(PKG_BUILD_DIR)/sslstrip/* $(1)$(PYTHON_PKG_DIR)
 endef
 
 $(eval $(call BuildPackage,sslstrip))
+
