@@ -1,0 +1,19 @@
+--- a/configure.in	2014-03-06 14:55:36.627221831 -0800
++++ b/configure.in	2014-03-06 14:56:48.709112089 -0800
+@@ -53,16 +53,6 @@
+ 
+ 
+ dnl
+-dnl Use these compiler flags if we have gcc.
+-dnl
+-if test $ac_cv_prog_gcc = yes; then
+-dnl if test -z $CFLAGS; then 
+-    CCOPTS='-O2 -funroll-loops -fomit-frame-pointer -Wall'
+-    CFLAGS="$CCOPTS"
+-dnl fi
+-fi
+-
+-dnl
+ dnl Check for package inclusion/exclusion
+ dnl
+ AC_ARG_WITH(pf_packet, [ --with-pf_packet=[yes,no] override defaults], \
