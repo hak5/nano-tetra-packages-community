@@ -8,25 +8,26 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ettercap
-PKG_VERSION:=0.8.2
-PKG_RELEASE:=1
+PKG_VERSION:=NG-0.7.3
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/Ettercap/ettercap/releases/download/v0.8.2/
-PKG_MD5SUM:=b6b20851862f55644d5f296f77b785d1
+PKG_SOURCE_URL:=@SF/ettercap
+PKG_MD5SUM:=28fb15cd024162c55249888fe1b97820
 
+PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
-# include $(INCLUDE_DIR)/nls.mk
+include $(INCLUDE_DIR)/nls.mk
 
 define Package/ettercap
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libcurl +libpcap +libnet1 +libopenssl +libpcre +libncurses +libltdl +libpthread +zlib +libiconv-full
+  DEPENDS:=+libpcap +libnet1 +libopenssl +libpcre +libncurses +libltdl +libpthread +zlib
   TITLE:=Ettercap is a suite for man in the middle attacks on LAN.
-  URL:=http://www.ettercap-project.org
+  URL:=http://ettercap.sourceforge.net
 endef
 
 define Package/ettercap/description
@@ -40,28 +41,33 @@ define Package/ettercap/conffiles
 /etc/etter.conf
 endef
 
-TARGET_CFLAGS += -I$(STAGING_DIR)/usr/lib/libiconv-full/include
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	# remove default optimization flags set by configure
+	$(SED) 's,DEBUG_FLAGS=.*,DEBUG_FLAGS=,g' $(PKG_BUILD_DIR)/configure
+endef
 
-#IPV6 -> LIBNET needed?
-CMAKE_OPTIONS += \
-	-DHAVE_UTF8:BOOL=OFF \
-	-DINSTALL_DESKTOP:BOOL=OFF \
-	-DENABLE_GTK:BOOL=OFF \
-	-DBUNDLED_LIBS:BOOL=OFF \
-	-DLIBNET_INCLUDE_DIR:PATH=$(STAGING_DIR)/usr/lib/libnet-1.1.x/include \
-	-DLIBNET_LIBRARY:FILEPATH=$(STAGING_DIR)/usr/lib/libnet-1.1.x/lib/libnet.so \
-	-DHAVE_ICONV:FILEPATH=$(STAGING_DIR)/usr/lib/libiconv-full/lib/libiconv.so \
-	-DEXECUTABLE_OUTPUT_PATH=$(PKG_BUILD_DIR)/bin_out
+CONFIGURE_ARGS += \
+	--with-libpcap="$(STAGING_DIR)/usr" \
+	--with-libnet="$(STAGING_DIR)/usr/lib/libnet-1.1.x" \
+	--with-openssl="$(STAGING_DIR)/usr" \
+	--with-libpcre="$(STAGING_DIR)/usr" \
+	--with-iconv="$(ICONV_PREFIX)" \
+	--with-libncurses="$(STAGING_DIR)/usr" \
+	--disable-gtk \
+	--disable-debug \
+	--enable-plugins
+
+MAKE_FLAGS += \
+	DESTDIR="$(PKG_INSTALL_DIR)"
 
 define Package/ettercap/install
-	$(INSTALL_DIR) $(1)/etc/ettercap
-	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/ettercap/etter.* $(1)/etc/ettercap/
+	$(INSTALL_DIR) $(1)/etc
+	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/etter.conf $(1)/etc/
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/etter{cap,filter,log} $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/lib/ettercap
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/ettercap/*.so $(1)/usr/lib/ettercap/
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/libettercap.so* $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/share/ettercap
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/ettercap/* $(1)/usr/share/ettercap/
 endef
