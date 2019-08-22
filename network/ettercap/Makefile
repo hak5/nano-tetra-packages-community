@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ettercap
-PKG_VERSION:=NG-0.7.3
-PKG_RELEASE:=2
+PKG_VERSION:=0.8.3
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@SF/ettercap
-PKG_MD5SUM:=28fb15cd024162c55249888fe1b97820
+PKG_SOURCE_URL:=https://github.com/Ettercap/ettercap.git
+PKG_SOURCE_VERSION:=90f2a397966d721868a1fb49c5ecaba0f0af72d0
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
