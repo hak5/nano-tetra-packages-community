@@ -1,0 +1,11 @@
+--- a/build.sh
++++ b/build.sh
+@@ -320,6 +320,8 @@
+ 
+ $CC $USE_CFLAGS $USE_LDFLAGS "$PROGNAME.c" $OBJFILES -o "$PROGNAME" $USE_LIBS &>"$TMP.log"
+ 
++$CC $USE_CFLAGS tools/p0f-client.c -o p0f-client &>"$TMP.log"
++
+ if [ ! -x "$PROGNAME" ]; then
+ 
+   echo "FAIL"
