@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/reaver
   SECTION:=net
   CATEGORY:=Network
-  SUBMENU:=Wireless
+  SUBMENU:=wireless
   TITLE:=Efficient online and offline brute force attack against Wifi Protected Setup
   URL:=https://github.com/t6x/reaver-wps-fork-t6x
   DEPENDS:=+libpcap +libsqlite3

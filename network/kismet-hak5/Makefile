@@ -23,7 +23,7 @@ define Package/kismet-hak5
   TITLE:=Kismet (Hak5)
   URL:=https://www.kismetwireless.net/
   DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libdw
-  SUBMENU:=Wireless
+  SUBMENU:=wireless
 endef
 
 define Package/kismet-hak5/description

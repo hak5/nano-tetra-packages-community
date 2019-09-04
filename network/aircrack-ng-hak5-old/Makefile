@@ -36,7 +36,7 @@ define Package/aircrack-ng-hak5-old
   TITLE:=WLAN tools for breaking 802.11 WEP/WPA keys
   URL:=https://www.aircrack-ng.org/
   MAINTAINER:=Andreas Nilsen <adde88@gmail.com>
-  SUBMENU:=Wireless
+  SUBMENU:=wireless
 endef
 
 define Package/aircrack-ng-hak5-old/description
