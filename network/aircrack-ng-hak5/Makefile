@@ -50,7 +50,7 @@ define Package/aircrack-ng-hak5
 	DEPENDS += +libnl-core +libnl-genl +zlib
 	TITLE:=WLAN Cracking and Sniffing tools (Hak5)
   	URL:=https://www.aircrack-ng.org/
-  	SUBMENU:=wireless
+  	SUBMENU:=Wireless
 endef
 
 define Package/aircrack-ng-hak5/description

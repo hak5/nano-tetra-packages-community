@@ -26,7 +26,7 @@ define Package/mdk3
   DEPENDS:=+libpthread
   TITLE:= MDK3
   URL:=http://homepages.tu-darmstadt.de/~p_larbig/wlan/
-  SUBMENU:=wireless
+  SUBMENU:=Wireless
 endef
 
 define Package/mdk3/description

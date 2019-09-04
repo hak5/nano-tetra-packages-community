@@ -23,7 +23,7 @@ define Package/kismet-remotecap-hak5
   TITLE:=Kismet Remote Capture (Hak5)
   URL:=https://www.kismetwireless.net/
   DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libdw
-  SUBMENU:=wireless
+  SUBMENU:=Wireless
 endef
 
 define Package/kismet-remotecap-hak5/description
