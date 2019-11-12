@@ -1,12 +1,32 @@
-diff -r -u sslsplit/GNUmakefile sslsplit_new/GNUmakefile
---- sslsplit/GNUmakefile	2018-06-15 16:31:26.206724177 +0500
-+++ sslsplit_new/GNUmakefile	2018-06-15 17:13:47.900160437 +0500
-@@ -304,6 +304,8 @@
- TPKG_LDFLAGS+=	-L$(CHECK_FOUND)/lib
- TPKG_LIBS+=	-lcheck
+--- a/GNUmakefile
++++ b/GNUmakefile
+@@ -79,7 +79,8 @@
+ ### Debugging
+
+ # These flags are added to CFLAGS iff building from a git repo.
+-DEBUG_CFLAGS?= -g
++# Disable to save space
++#DEBUG_CFLAGS?=        -g
+ #DEBUG_CFLAGS+=        -Werror
+
+ # Define to remove false positives when debugging memory allocation.
+@@ -381,6 +382,8 @@ TPKG_CPPFLAGS+=     -I$(CHECK_FOUND)/include
+ TPKG_LDFLAGS+= -L$(CHECK_FOUND)/lib
+ TPKG_LIBS+=    -lcheck
  endif
 +# Additional flags for compilation with musl-fts
-+PKG_LIBS+=	-lfts
- 
++PKG_LIBS+=     -lfts
+
  ifneq (,$(strip $(PKGS)))
- PKG_CFLAGS+=	$(shell $(PKGCONFIG) $(PCFLAGS) --cflags-only-other $(PKGS))
+ PKG_CFLAGS+=   $(shell $(PKGCONFIG) $(PCFLAGS) --cflags-only-other $(PKGS))
+@@ -402,8 +405,8 @@ CPPDEFS+=   -D_GNU_SOURCE \
+ CPPCHECKFLAGS+=        $(CPPDEFS)
+
+ ifneq (ccc-analyzer,$(notdir $(CC)))
+-PKG_CPPFLAGS:= $(subst -I,-isystem,$(PKG_CPPFLAGS))
+-TPKG_CPPFLAGS:=        $(subst -I,-isystem,$(TPKG_CPPFLAGS))
++PKG_CPPFLAGS:= $(subst -I, ,$(PKG_CPPFLAGS))
++TPKG_CPPFLAGS:=        $(subst -I, ,$(TPKG_CPPFLAGS))
+ endif
+
+ CFLAGS+=       $(PKG_CFLAGS) \
