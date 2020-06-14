@@ -13,7 +13,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILES:=LICENSE.md
-PKG_MAINTAINER:=Simone Margaritelli <evilsocket@evilsocket.net>
+PKG_MAINTAINER:=Benjamin Kurtz <awgh@awgh.org>
 
 PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1
