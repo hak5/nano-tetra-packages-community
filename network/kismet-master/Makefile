@@ -1,32 +1,33 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=kismet-master
-PKG_VERSION:=master
+PKG_NAME:=kismet
+PKG_VERSION:=2020-04-R3
 PKG_RELEASE:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/kismetwireless/kismet.git
-PKG_SOURCE_VERSION:=96979509a4246c927f162d05bcadbce7f116f967
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+
+PKG_SOURCE_URL:=https://codeload.github.com/kismetwireless/kismet/tar.gz/kismet-$(PKG_VERSION)?
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 
 PKG_USE_MIPS16:=0
 
-HOST_BUILD_DEPENDS:=protobuf/host 
+HOST_BUILD_DEPENDS:=protobuf/host
 
-define Package/kismet-master
+define Package/kismet
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=Kismet (Master)
+  TITLE:=Kismet
   URL:=https://www.kismetwireless.net/
   DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libdw
   SUBMENU:=wireless
 endef
 
-define Package/kismet-master/description
+define Package/kismet/description
 	Kismet wireless capture and IDS
 	Latest web UI based Kismet
 	Linux Wi-Fi and Bluetooth capture tools
@@ -46,7 +47,7 @@ CONFIGURE_ARGS += \
 # Override libs to force lpthread because we don't detect it properly on openwrt
 CONFIGURE_VARS += \
 	CXXFLAGS="$$$$CXXFLAGS"  \
-	LIBS="-lm -lpthread" 
+	LIBS="-lm -lpthread"
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
@@ -54,7 +55,7 @@ define Build/Compile
 		all
 endef
 
-define Package/kismet-master/install
+define Package/kismet/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/kismet_cap_pcapfile $(1)/usr/bin/
@@ -62,7 +63,7 @@ define Package/kismet-master/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/capture_linux_bluetooth/kismet_cap_linux_bluetooth $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/kismet/
-	$(INSTALL_CONF) ./files/kismet_package.conf $(1)/etc/kismet
+	$(INSTALL_CONF) ./files/kismet_site.conf $(1)/etc/kismet/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_80211.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_alerts.conf $(1)/etc/kismet
@@ -76,8 +77,8 @@ define Package/kismet-master/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_adsb_icao.txt.gz $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_bluetooth_ids.txt.gz $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_bluetooth_manuf.txt.gz $(1)/etc/kismet
-
 	cp -Rv $(PKG_BUILD_DIR)/http_data $(1)/etc/kismet/
 endef
 
-$(eval $(call BuildPackage,kismet-master))
+$(eval $(call BuildPackage,kismet))
+
