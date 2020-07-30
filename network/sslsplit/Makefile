@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sslsplit
-PKG_VERSION:=0.5.4
+PKG_VERSION:=0.5.5
 PKG_RELEASE:=1
 PKG_LICENSE:=BSD-2-Clause
 PKG_LICENSE_FILES:=LICENSE LICENSE.contrib LICENSE.third
@@ -16,7 +16,7 @@ PKG_LICENSE_FILES:=LICENSE LICENSE.contrib LICENSE.third
 PKG_SOURCE:=sslsplit.tar.gz
 PKG_SOURCE_URL:=https://github.com/droe/sslsplit.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=0.5.4
+PKG_SOURCE_VERSION:=0.5.5
 
 PKG_INSTALL:=1
 
@@ -27,7 +27,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/sslsplit
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libevent2 +libopenssl +libevent2-openssl +libevent2-pthreads +USE_MUSL:musl-fts
+  DEPENDS:=+libevent2 +libopenssl +libevent2-openssl +libevent2-pthreads +libnet-1.2.x +libpcap +USE_MUSL:musl-fts
   TITLE:=Transparent SSL/TLS interception
   URL:=https://www.roe.ch/SSLsplit
 endef
