@@ -1,0 +1,19 @@
+config DRIVER_WEXT_SUPPORT
+	bool
+	default y
+
+config DRIVER_11N_SUPPORT
+        bool
+        default y
+
+config DRIVER_11AC_SUPPORT
+        bool
+        default y
+
+config DRIVER_11W_SUPPORT
+        bool
+        default y
+
+config DRIVER_TAXONOMY
+        bool
+        default y
