@@ -1,13 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=kismet-remotecap-hak5
-PKG_VERSION:=2020-03-R1
+PKG_VERSION:=2021-05-R1
 PKG_RELEASE:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/kismetwireless/kismet.git
-PKG_SOURCE_VERSION:=925cf90e0112a0bfc926e21e0fae4503ae3b7a78
+PKG_SOURCE_VERSION:=149efea60214f473c9ec9b16e50c3b22a8a874d0
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
@@ -15,14 +15,14 @@ include $(INCLUDE_DIR)/package.mk
 
 PKG_USE_MIPS16:=0
 
-HOST_BUILD_DEPENDS:=protobuf/host 
+HOST_BUILD_DEPENDS:=protobuf/host
 
 define Package/kismet-remotecap-hak5
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Kismet Remote Capture (Hak5)
   URL:=https://www.kismetwireless.net/
-  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libdw
+  DEPENDS:=+libpthread +libpcap +libpcre +libmicrohttpd +libnl +libcap +libstdcpp +libncurses +libsqlite3 +zlib +protobuf-lite +libprotobuf-c +libdw +libwebsockets-full
   SUBMENU:=wireless
 endef
 
@@ -44,12 +44,13 @@ CONFIGURE_ARGS += \
 # Override libs to force lpthread because we don't detect it properly on openwrt
 CONFIGURE_VARS += \
 	CXXFLAGS="$$$$CXXFLAGS"  \
-	LIBS="-lm -lpthread" 
+	LIBS="-lm -lpthread"
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		LD="$(TARGET_CXX)" \
 		datasources
+	gzip -d $(PKG_BUILD_DIR)/conf/kismet_manuf.txt.gz
 endef
 
 define Package/kismet-remotecap-hak5/install
@@ -67,9 +68,11 @@ define Package/kismet-remotecap-hak5/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_httpd.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_logging.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_memory.conf $(1)/etc/kismet
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_storage.conf $(1)/etc/kismet
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_uav.conf $(1)/etc/kismet
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/kismet_manuf.txt $(1)/etc/kismet
+
+	$(INSTALL_DIR) $(1)/usr/share/kismet/httpd/
+	cp -Rv $(PKG_BUILD_DIR)/http_data/* $(1)/usr/share/kismet/httpd/
 endef
 
 $(eval $(call BuildPackage,kismet-remotecap-hak5))
-
